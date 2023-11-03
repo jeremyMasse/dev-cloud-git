@@ -1,0 +1,33 @@
+name: Test and Deploy
+
+on:
+  push:
+    branches:
+      - main # Définissez la branche sur laquelle vous souhaitez déclencher l'action (par exemple, main).
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.8.2 # Vous pouvez choisir la version de Node.js appropriée.
+
+      - name: Install dependencies
+        run: |
+          npm install  # Vous devrez peut-être ajuster cette commande en fonction de votre gestionnaire de paquets.
+
+      - name: Run tests
+        run: |
+          npm test  # Assurez-vous que cette commande exécute vos tests.
+
+      - name: Deploy to GitHub Pages
+        if: success() # Ne déploie que si les tests réussissent
+        run: |
+          npm run build  # Vous devrez peut-être ajuster cette commande en fonction de votre configuration de build.
+          git push -f origin gh-pages
